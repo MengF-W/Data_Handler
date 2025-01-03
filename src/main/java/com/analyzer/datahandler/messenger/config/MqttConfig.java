@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,17 +16,14 @@ import java.util.UUID;
 @Configuration
 @ComponentScan(basePackages = "com.analyzer.datahandler")
 public class MqttConfig {
-    private final String MQTT_BROKER_IP = "localhost";
-
-    private final String MQTT_BROKER_PORT = "1883";
-    private final String MQTT_SERVER_ADDRES= "tcp://"+MQTT_BROKER_IP+":"+MQTT_BROKER_PORT;
-
-    private final String MQTT_PUBLISHER_ID = UUID.randomUUID().toString();
 
     private final String DEVICE_RECEIVE_TOPIC = "/device/receive";
 
     @Autowired
     private DeviceMessageProcessor deviceMessageProcessor;
+
+    @Autowired
+    private Environment environment;
 
 
     @Bean
@@ -37,6 +35,14 @@ public class MqttConfig {
     }
 
     private IMqttClient initConnection(){
+
+        final String MQTT_IP = environment.getProperty("mqtt.ip");
+
+        final String MQTT_PORT = environment.getProperty("mqtt.port");
+
+        final String MQTT_SERVER_ADDRES= "tcp://"+MQTT_IP+":"+MQTT_PORT;
+
+        final String MQTT_PUBLISHER_ID = UUID.randomUUID().toString();
 
         IMqttClient iMqttClient = null;
 

@@ -4,9 +4,11 @@ import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.json.jackson.JacksonJsonpMapper;
 import co.elastic.clients.transport.rest_client.RestClientTransport;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.data.elasticsearch.client.ClientConfiguration;
 import org.springframework.data.elasticsearch.client.RestClients;
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
@@ -19,13 +21,15 @@ import java.io.IOException;
 @EnableElasticsearchRepositories(basePackages = "com.analyzer.datahandler.database.repository")
 public class ElasticConfiguration
 {
-
-    private final String DATABASE_IP = "localhost";
-
-    private final String DATABASE_PORT = "9200";
+    @Autowired
+    private Environment environment;
 
     @Bean
     public RestHighLevelClient initElasticsearchClient() {
+
+        final String DATABASE_IP = environment.getProperty("elasticsearch.ip");
+
+        final String DATABASE_PORT = environment.getProperty("elasticsearch.port");
 
         HttpHeaders compatibilityHeaders = new HttpHeaders();
         compatibilityHeaders.add("Accept", "application/vnd.elasticsearch+json;compatible-with=7");
