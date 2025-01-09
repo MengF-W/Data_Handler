@@ -5,6 +5,7 @@ import co.elastic.clients.json.jackson.JacksonJsonpMapper;
 import co.elastic.clients.transport.rest_client.RestClientTransport;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +25,9 @@ public class ElasticConfiguration
     @Autowired
     private Environment environment;
 
+    @Value("${running.mode}")
+    private String runningMode;
+
     @Bean
     public RestHighLevelClient initElasticsearchClient() {
 
@@ -42,18 +46,20 @@ public class ElasticConfiguration
 
         RestHighLevelClient restHighLevelClient = RestClients.create(clientConfiguration).rest();
 
-        RestClientTransport restClientTransport = new RestClientTransport(
-                restHighLevelClient.getLowLevelClient(), new JacksonJsonpMapper());
+        ElasticsearchClient client = new ElasticsearchClient(new RestClientTransport(
+                restHighLevelClient.getLowLevelClient(), new JacksonJsonpMapper()));
 
-        ElasticsearchClient client = new ElasticsearchClient(restClientTransport);
-
-        try {
-            if(client.ping().value()){
-                System.out.println("Elastic is connected");
-            }
-        } catch (IOException e) {
+        if (!runningMode.equals("Testing"))
+        {
+            try {
+                if(client.ping().value()){
+                    System.out.println("Elastic is connected");
+                }
+            } catch (IOException e) {
                 System.out.println("Elastic is not connected");
-            throw new RuntimeException(e);
+                throw new RuntimeException(e);
+            }
+
         }
         return restHighLevelClient;
     }

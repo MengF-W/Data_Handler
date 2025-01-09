@@ -4,6 +4,7 @@ import org.eclipse.paho.client.mqttv3.*;
 import com.analyzer.datahandler.messenger.processor.DeviceMessageProcessor;
 import com.analyzer.datahandler.messenger.processor.MqttMessageProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +19,9 @@ import java.util.UUID;
 public class MqttConfig {
 
     private final String DEVICE_RECEIVE_TOPIC = "/device/receive";
+
+    @Value("${running.mode}")
+    private String runningMode;
 
     @Autowired
     private DeviceMessageProcessor deviceMessageProcessor;
@@ -54,10 +58,13 @@ public class MqttConfig {
             options.setCleanSession(true);
             options.setConnectionTimeout(10);
 
-            if(iMqttClient.connectWithResult(options).getClient().isConnected())
+            if (!runningMode.equals("Testing"))
             {
-                System.out.println("MQTT is connected");
-                setTopic(iMqttClient);
+                if(iMqttClient.connectWithResult(options).getClient().isConnected())
+                {
+                    System.out.println("MQTT is connected");
+                    setTopic(iMqttClient);
+                }
             }
 
         } catch (MqttException e) {
