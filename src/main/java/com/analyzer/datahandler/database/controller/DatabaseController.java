@@ -16,17 +16,17 @@ public class DatabaseController {
     @Autowired
     DeviceRepository deviceRepository;
 
-    @Autowired
-    JsonParser jsonParser;
+    public static final String RESPONSE_CREATED_MESSAGE = "Device data is created in database";
+
 
     @PostMapping(path= "/createContent" ,
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<String> createData(@RequestBody String content) {
 
-        Device device = jsonParser.deserializeJson(content,Device.class);
+        Device device = JsonParser.getInstance().deserializeJson(content,Device.class);
         deviceRepository.save(device);
-        return new ResponseEntity<>("Device data is created in database", HttpStatus.CREATED);
+        return new ResponseEntity<>(RESPONSE_CREATED_MESSAGE, HttpStatus.CREATED);
 
     }
 
