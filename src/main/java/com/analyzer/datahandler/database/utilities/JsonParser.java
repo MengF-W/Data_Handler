@@ -4,20 +4,28 @@ import com.google.gson.Gson;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
-@Component
 public class JsonParser {
 
-    private Gson gSon;
+    private static JsonParser jsonParser;
+    private static Gson gSon;
 
-    @Bean
-    public Gson getInstance() {
+    private JsonParser(){}
 
-        if(gSon == null){
 
+    public static JsonParser getInstance() {
+
+        if(jsonParser == null){
+
+            jsonParser = new JsonParser();
             gSon = new Gson();
         }
 
-        return gSon;
+        return jsonParser;
+    }
+
+    public String serializeJson(Object sourceObject)
+    {
+        return gSon.toJson(sourceObject);
     }
 
     public <T> T deserializeJson(String jsonString, Class<T> targetObject)
