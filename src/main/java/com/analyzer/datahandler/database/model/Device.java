@@ -5,6 +5,12 @@ import org.springframework.data.elasticsearch.annotations.Document;
 
 @Document(indexName = "devices")
 public class Device {
+    public Device(String id, String name, String deviceType, String messageContent) {
+        this.id = id;
+        this.name = name;
+        this.deviceType = deviceType;
+        this.messageContent = messageContent;
+    }
 
     @Id
     private String id;

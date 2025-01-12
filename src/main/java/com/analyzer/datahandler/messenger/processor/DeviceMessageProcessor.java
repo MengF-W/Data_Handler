@@ -16,25 +16,24 @@ public class DeviceMessageProcessor implements MqttMessageProcessor{
     private final String DATABASE_URL = "http://localhost:8080/db/createContent";
 
     @Autowired
-    private  DeviceRepository deviceRepository;
-
-    @Autowired
     private RestTemplate restTemplate;
 
     @Override
     @Async
-    public void processMessage(String topic, MqttMessage message) throws Exception {
+    public String processMessage(String topic, MqttMessage message){
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
 
         HttpEntity<String> request =
-                new HttpEntity<String>(new String(message.getPayload()), headers);
+                new HttpEntity<String>(new String(message.getPayload()), httpHeaders);
 
         String responseResult =
                 restTemplate.postForObject(DATABASE_URL, request, String.class);
 
         System.out.println(responseResult);
+
+        return responseResult;
     }
 
 }
