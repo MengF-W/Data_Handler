@@ -1,0 +1,11 @@
+
+services:
+  application:
+    container_name: data_handler
+    image: data_handler
+    restart: always
+    ports:
+      - "500:500"
+    environment:
+      - elasticsearch.ip=host.docker.internal
+      - mqtt.ip=host.docker.internal
