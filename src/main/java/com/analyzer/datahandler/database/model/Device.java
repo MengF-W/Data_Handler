@@ -31,9 +31,6 @@ public class Device {
 
     private String messageContent;
 
-//    @Field(name = "@timestamp", type = FieldType.Date,pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-//    private Date timeStamp;
-    //    @Field(name = "@timestamp", format = DateFormat.custom,pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
 @Field(name = "@timestamp", type = FieldType.Date,format = DateFormat.custom,pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 @JsonDeserialize(using = LocalDateDeserializer.class)
 @JsonFormat(pattern="dd/MM/yyyy hh:mm:ss")
