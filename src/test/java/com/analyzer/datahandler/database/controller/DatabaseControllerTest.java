@@ -12,6 +12,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.Date;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -27,7 +31,7 @@ public class DatabaseControllerTest {
     @Test
     public void testCreateData() throws Exception {
 
-        String someDeviceMessage = new Gson().toJson(new Device("someDeviceId", "someDeviceName", "someDeviceType", "someDeviceMessageContent"));
+        String someDeviceMessage = new Gson().toJson(new Device("someDeviceId", "someDeviceName", "someDeviceType", "someDeviceMessageContent", LocalDateTime.now()));
 
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/db/createContent")
