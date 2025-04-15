@@ -11,4 +11,6 @@ public interface DeviceRepository extends ElasticsearchRepository<Device, String
 
     List<Device> findByName(String deviceName);
 
+    List<Device> findAll();
+
 }

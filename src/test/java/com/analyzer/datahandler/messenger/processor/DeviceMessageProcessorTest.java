@@ -17,6 +17,10 @@ import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.Date;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -48,7 +52,7 @@ public class DeviceMessageProcessorTest {
     @Before
     public void setUp() throws Exception
     {
-        String someDeviceMessage = new Gson().toJson(new Device("someDeviceId", "someDeviceName", "someDeviceType", "someDeviceMessageContent"));
+        String someDeviceMessage = new Gson().toJson(new Device("someDeviceId", "someDeviceName", "someDeviceType", "someDeviceMessageContent", LocalDateTime.now()));
         someMqttMessage = new MqttMessage(someDeviceMessage.getBytes());
         testHttpHeaders = new HttpHeaders();
         testHttpHeaders.setContentType(MediaType.APPLICATION_JSON);
