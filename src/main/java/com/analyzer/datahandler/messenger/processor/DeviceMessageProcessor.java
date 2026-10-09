@@ -1,7 +1,6 @@
 package com.analyzer.datahandler.messenger.processor;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-import com.analyzer.datahandler.database.repository.DeviceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;

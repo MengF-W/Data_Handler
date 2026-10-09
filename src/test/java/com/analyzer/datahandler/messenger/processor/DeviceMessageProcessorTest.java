@@ -1,15 +1,12 @@
 package com.analyzer.datahandler.messenger.processor;
 
-import com.analyzer.datahandler.database.controller.DatabaseController;
-import com.analyzer.datahandler.database.model.Device;
+import com.analyzer.datahandler.database.elastic.controller.DatabaseElasticController;
+import com.analyzer.datahandler.database.elastic.model.Device;
 import com.google.gson.Gson;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentMatchers;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -17,9 +14,7 @@ import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -68,9 +63,9 @@ public class DeviceMessageProcessorTest {
                 eq(DATABASE_URL),
                 eq(testRequest),
                 eq(String.class)
-        )).thenReturn(DatabaseController.RESPONSE_CREATED_MESSAGE);
+        )).thenReturn(DatabaseElasticController.RESPONSE_CREATED_MESSAGE);
 
-        assertEquals(DatabaseController.RESPONSE_CREATED_MESSAGE, deviceMessageProcessor.processMessage(testMqttTopic,someMqttMessage));
+        assertEquals(DatabaseElasticController.RESPONSE_CREATED_MESSAGE, deviceMessageProcessor.processMessage(testMqttTopic,someMqttMessage));
 
         verify(mockRestTemplate, times(1)).postForObject(
                 eq(DATABASE_URL),

@@ -1,4 +1,4 @@
-package com.analyzer.datahandler.database.configuration;
+package com.analyzer.datahandler.database.elastic.configuration;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.json.jackson.JacksonJsonpMapper;
@@ -19,7 +19,7 @@ import java.io.IOException;
 
 @Configuration
 @ComponentScan(basePackages = "com.analyzer.datahandler")
-@EnableElasticsearchRepositories(basePackages = "com.analyzer.datahandler.database.repository")
+@EnableElasticsearchRepositories(basePackages = "com.analyzer.datahandler.database.elastic.repository")
 public class ElasticConfiguration
 {
     @Autowired
@@ -28,7 +28,7 @@ public class ElasticConfiguration
     @Value("${running.mode}")
     private String runningMode;
 
-    @Bean
+//    @Bean
     public RestHighLevelClient initElasticsearchClient() {
 
         final String DATABASE_IP = environment.getProperty("elasticsearch.ip");
