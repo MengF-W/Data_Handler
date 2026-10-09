@@ -15,21 +15,21 @@ import java.util.Date;
 
 @Document(indexName = "devices")
 public class Device {
-    public Device(String id, String name, String deviceType, String messageContent, LocalDateTime timeStamp) {
+    public Device(String id, String name, String deviceType, String messageContent, byte[] mediaContent, LocalDateTime timeStamp) {
         this.id = id;
         this.name = name;
         this.deviceType = deviceType;
         this.messageContent = messageContent;
+        this.mediaContent = mediaContent;
         this.timeStamp = timeStamp;
     }
 
     @Id
     private String id;
-
     private String name;
     private String deviceType;
-
     private String messageContent;
+    private byte[] mediaContent;
 
 @Field(name = "@timestamp", type = FieldType.Date,format = DateFormat.custom,pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 @JsonDeserialize(using = LocalDateDeserializer.class)
@@ -68,6 +68,10 @@ public class Device {
     public void setMessageContent(String messageContent) {
         this.messageContent = messageContent;
     }
+
+    public byte[] getMediaContent() {return mediaContent;}
+
+    public void setMediaContent(byte[] mediaContent) {this.mediaContent = mediaContent;}
 
     public LocalDateTime getTimeStamp() {
         return timeStamp;

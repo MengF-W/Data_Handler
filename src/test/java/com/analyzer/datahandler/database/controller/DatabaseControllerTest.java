@@ -30,7 +30,7 @@ public class DatabaseControllerTest {
     @Test
     public void testCreateData() throws Exception {
 
-        String someDeviceMessage = new Gson().toJson(new Device("someDeviceId", "someDeviceName", "someDeviceType", "someDeviceMessageContent", LocalDateTime.now()));
+        String someDeviceMessage = new Gson().toJson(new Device("someDeviceId", "someDeviceName", "someDeviceType", "someDeviceMessageContent", new byte[1],LocalDateTime.now()));
 
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/db/createContent")

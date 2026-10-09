@@ -47,7 +47,7 @@ public class DeviceMessageProcessorTest {
     @Before
     public void setUp() throws Exception
     {
-        String someDeviceMessage = new Gson().toJson(new Device("someDeviceId", "someDeviceName", "someDeviceType", "someDeviceMessageContent", LocalDateTime.now()));
+        String someDeviceMessage = new Gson().toJson(new Device("someDeviceId", "someDeviceName", "someDeviceType", "someDeviceMessageContent", new byte[1], LocalDateTime.now()));
         someMqttMessage = new MqttMessage(someDeviceMessage.getBytes());
         testHttpHeaders = new HttpHeaders();
         testHttpHeaders.setContentType(MediaType.APPLICATION_JSON);
