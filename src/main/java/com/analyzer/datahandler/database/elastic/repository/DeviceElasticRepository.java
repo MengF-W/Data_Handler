@@ -6,8 +6,7 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
 
 import java.util.List;
 
-
-public interface DeviceElasticRepository extends ElasticsearchRepository<Device, String> {
+public interface DeviceElasticRepository extends ElasticsearchRepository<Device, Long> {
 
     List<Device> findByName(String deviceName);
 

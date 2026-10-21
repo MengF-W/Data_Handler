@@ -16,23 +16,33 @@ public class Device {
     public Device() {
     }
 
+    public Device(long id, String name, String deviceType, String messageContent, byte[] mediaContent, LocalDateTime timeStamp) {
+        this.id = id;
+        this.name = name;
+        this.deviceType = deviceType;
+        this.messageContent = messageContent;
+        this.mediaContent = mediaContent;
+        this.timeStamp = timeStamp;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
     private String name;
     private String deviceType;
     private String messageContent;
     private byte[] mediaContent;
     @JsonDeserialize(using = LocalDateDeserializer.class)
-    @JsonFormat(pattern = "dd/MM/yyyy hh:mm:ss")
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+
     private LocalDateTime timeStamp;
 
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -75,4 +85,6 @@ public class Device {
     public void setMediaContent(byte[] mediaContent) {
         this.mediaContent = mediaContent;
     }
+
+
 }
