@@ -35,7 +35,7 @@ The data handler application process and save the MQTT enabled devices data into
 # Publish
 It has been published as a service and can be accessed from [Data Panel](https://github.com/MengF-W/Data_Panel)
 
-# MQTT Broker Deployment Option
+# MQTT Broker Server Option
 * Public Server : Public MQTT Broker Server such as [Mosquitto](https://test.mosquitto.org/) is available and it is free to test. Clients can read or publish to public topics. Therefore, it is not safe or private for sensitive data
 * Private Host Server : The MQTT Broker can be deployed into cloud service provider such as [Render](https://render.com/deploy-docker/eclipse-mosquitto). After testing find that there is message packet size limitation (for about 5000 bytes length) in Render host service and the client receiver's connection will disconnect when receive message. The max_packet_size setting does not affect it. The explanation from Render about the connection can drop due to: <br />
 
