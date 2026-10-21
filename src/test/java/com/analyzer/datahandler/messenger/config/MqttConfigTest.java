@@ -11,6 +11,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Objects;
+
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
@@ -27,8 +29,7 @@ public class MqttConfigTest {
     @Test
     public void testMqttConfigurationIsValid() {
         assertNotNull(mqttConfig);
-        assertTrue(mqttConfig.initMqttClient().getServerURI().contains(environment.getProperty("mqtt.ip")));
-        assertTrue(mqttConfig.initMqttClient().getServerURI().contains(environment.getProperty("mqtt.port")));
+        assertTrue(mqttConfig.initMqttClient().getServerURI().contains(Objects.requireNonNull(environment.getProperty("mqtt.server.address"))));
 
     }
 }
