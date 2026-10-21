@@ -4,16 +4,17 @@ import com.analyzer.datahandler.database.postgres.model.Device;
 import com.analyzer.datahandler.database.postgres.repository.DevicePostgresRepository;
 import com.analyzer.datahandler.database.utilities.JsonParser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+@CrossOrigin(origins = "*")
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping(value = "/db/postgres")
 public class DatabasePostgresController {
 
@@ -35,12 +36,14 @@ public class DatabasePostgresController {
     }
 
     @GetMapping(path= "/getAllData" ,
+            params = { "pageNumber", "pageSize" },
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Device> getAllData() {
-        List<Device> devices = deviceRepository.findAll();
-        return devices.stream().sorted((p1, p2) -> (p1.getTimeStamp()).compareTo(p2.getTimeStamp())).collect(Collectors.toList());
+    public Page<Device> getAllData(@RequestParam("pageNumber") int pageNumber, @RequestParam("pageSize") int pageSize) {
+
+        Pageable pageable = PageRequest.of(pageNumber-1, pageSize, Sort.by("timeStamp").descending());
+
+        return deviceRepository.findAll(pageable);
 
     }
-
 
 }
