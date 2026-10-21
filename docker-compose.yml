@@ -8,4 +8,4 @@ services:
       - "500:500"
     environment:
       - elasticsearch.ip=host.docker.internal
-      - mqtt.ip=host.docker.internal
+      - mqtt.server.address=tcp://host.docker.internal:1883
