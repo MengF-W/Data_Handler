@@ -33,7 +33,7 @@ The data handler application process and save the MQTT enabled devices data into
 ![image](https://github.com/user-attachments/assets/d833388a-c648-47b7-b41e-dfa24c58f916)
 
 # Publish
-It has been published as a service and can be accessed from [Data Panel] (https://github.com/MengF-W/Data_Panel)
+It has been published as a service and can be accessed from [Data Panel](https://github.com/MengF-W/Data_Panel)
 
 # MQTT Broker Deployment Option
 * Public Server : Public MQTT Broker Server such as [Mosquitto](https://test.mosquitto.org/) is available and it is free to test. Clients can read or publish to public topics. Therefore, it is not safe or private for sensitive data
