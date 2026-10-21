@@ -1,0 +1,84 @@
+package com.analyzer.datahandler.database.elastic.model;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.DateFormat;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
+
+import java.time.LocalDateTime;
+
+@Document(indexName = "devices")
+public class Device {
+    public Device(long id, String name, String deviceType, String messageContent, byte[] mediaContent, LocalDateTime timeStamp) {
+        this.id = id;
+        this.name = name;
+        this.deviceType = deviceType;
+        this.messageContent = messageContent;
+        this.mediaContent = mediaContent;
+        this.timeStamp = timeStamp;
+    }
+
+    @Id
+    private long id;
+    private String name;
+    private String deviceType;
+    private String messageContent;
+    private byte[] mediaContent;
+
+@Field(name = "@timestamp", type = FieldType.Date,format = DateFormat.custom,pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+@JsonDeserialize(using = LocalDateDeserializer.class)
+@JsonFormat(pattern="dd/MM/yyyy HH:mm:ss")
+    private LocalDateTime timeStamp;
+
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDeviceType() {
+        return deviceType;
+    }
+
+    public void setDeviceType(String deviceType) {
+        this.deviceType = deviceType;
+    }
+
+    public String getMessageContent() {
+        return messageContent;
+    }
+
+    public void setMessageContent(String messageContent) {
+        this.messageContent = messageContent;
+    }
+
+    public byte[] getMediaContent() {return mediaContent;}
+
+    public void setMediaContent(byte[] mediaContent) {this.mediaContent = mediaContent;}
+
+    public LocalDateTime getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(LocalDateTime timeStamp) {
+        this.timeStamp = timeStamp;
+    }
+
+
+
+}

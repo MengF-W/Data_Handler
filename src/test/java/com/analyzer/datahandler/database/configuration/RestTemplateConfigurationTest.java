@@ -2,7 +2,7 @@ package com.analyzer.datahandler.database.configuration;
 
 import static org.junit.Assert.*;
 
-import com.analyzer.datahandler.database.configuration.RestTemplateConfiguration;
+import com.analyzer.datahandler.messenger.config.RestTemplateConfiguration;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

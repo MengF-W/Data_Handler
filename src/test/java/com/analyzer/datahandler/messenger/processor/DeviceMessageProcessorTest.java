@@ -1,25 +1,26 @@
 package com.analyzer.datahandler.messenger.processor;
 
-import com.analyzer.datahandler.database.controller.DatabaseController;
-import com.analyzer.datahandler.database.model.Device;
+import com.analyzer.datahandler.database.elastic.controller.DatabaseElasticController;
+import com.analyzer.datahandler.database.elastic.model.Device;
+import com.analyzer.datahandler.database.utilities.LocalDateTimeAdapter;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentMatchers;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.core.env.Environment;
 import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
 
-import java.time.Instant;
+import java.io.ByteArrayOutputStream;
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.zip.DataFormatException;
+import java.util.zip.Deflater;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -32,6 +33,9 @@ public class DeviceMessageProcessorTest {
     @Autowired
     private DeviceMessageProcessor deviceMessageProcessor;
 
+    @Autowired
+    private Environment environment;
+
     @MockBean
     private RestTemplate mockRestTemplate;
 
@@ -43,7 +47,7 @@ public class DeviceMessageProcessorTest {
 
     private String testMqttTopic;
 
-    private final String DATABASE_URL = "http://localhost:8080/db/createContent";
+    private final String DATABASE_URL = "http://localhost:8080/db/postgres/createContent";
 
 
     public DeviceMessageProcessorTest() {
@@ -52,15 +56,17 @@ public class DeviceMessageProcessorTest {
     @Before
     public void setUp() throws Exception
     {
-        String someDeviceMessage = new Gson().toJson(new Device("someDeviceId", "someDeviceName", "someDeviceType", "someDeviceMessageContent", LocalDateTime.now()));
-        someMqttMessage = new MqttMessage(someDeviceMessage.getBytes());
+        String someDeviceMessage =  new GsonBuilder()
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+                .create().toJson(new Device(123, "someDeviceName", "someDeviceType", "someDeviceMessageContent", new byte[1], LocalDateTime.now()));
+        someMqttMessage = new MqttMessage(compressPayload(someDeviceMessage.getBytes()));
         testHttpHeaders = new HttpHeaders();
         testHttpHeaders.setContentType(MediaType.APPLICATION_JSON);
         testRequest = new HttpEntity<String>(someDeviceMessage, testHttpHeaders);
     }
 
     @Test
-    public void testProcessMessage() {
+    public void testProcessMessage() throws DataFormatException {
 
         testMqttTopic = "/device/receive";
 
@@ -68,9 +74,9 @@ public class DeviceMessageProcessorTest {
                 eq(DATABASE_URL),
                 eq(testRequest),
                 eq(String.class)
-        )).thenReturn(DatabaseController.RESPONSE_CREATED_MESSAGE);
+        )).thenReturn(DatabaseElasticController.RESPONSE_CREATED_MESSAGE);
 
-        assertEquals(DatabaseController.RESPONSE_CREATED_MESSAGE, deviceMessageProcessor.processMessage(testMqttTopic,someMqttMessage));
+        assertEquals(DatabaseElasticController.RESPONSE_CREATED_MESSAGE, deviceMessageProcessor.processMessage(testMqttTopic,someMqttMessage));
 
         verify(mockRestTemplate, times(1)).postForObject(
                 eq(DATABASE_URL),
@@ -78,6 +84,23 @@ public class DeviceMessageProcessorTest {
                 eq(String.class));
 
 
+    }
+
+    private byte[] compressPayload(byte[] payload){
+
+        Deflater deflater = new Deflater();
+        deflater.setInput(payload);
+        deflater.finish();
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+
+        while (!deflater.finished()) {
+            int compressedSize = deflater.deflate(buffer);
+            outputStream.write(buffer, 0, compressedSize);
+        }
+
+        return outputStream.toByteArray();
     }
 
 }

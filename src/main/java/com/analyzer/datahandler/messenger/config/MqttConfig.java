@@ -21,6 +21,8 @@ public class MqttConfig {
 
     private final String DEVICE_RECEIVE_TOPIC = "/device/receive";
 
+    private MqttConnectOptions options;
+
     @Value("${running.mode}")
     private String runningMode;
 
@@ -34,19 +36,12 @@ public class MqttConfig {
     @Bean
     public IMqttClient initMqttClient() {
 
-        IMqttClient iMqttClient = initConnection();
-
-        return iMqttClient;
+        return initConnection();
     }
 
     private IMqttClient initConnection(){
 
-        final String MQTT_IP = environment.getProperty("mqtt.ip");
-
-        final String MQTT_PORT = environment.getProperty("mqtt.port");
-
-        final String MQTT_SERVER_ADDRES= "tcp://"+MQTT_IP+":"+MQTT_PORT;
-
+        final String MQTT_SERVER_ADDRES= environment.getProperty("mqtt.server.address");
         final String MQTT_PUBLISHER_ID = UUID.randomUUID().toString();
 
         IMqttClient iMqttClient = null;
@@ -63,22 +58,27 @@ public class MqttConfig {
                 iMqttClient = new MqttClient(MQTT_SERVER_ADDRES, MQTT_PUBLISHER_ID,new MemoryPersistence());
             }
 
-            MqttConnectOptions options = new MqttConnectOptions();
+            this.options = new MqttConnectOptions();
             options.setAutomaticReconnect(true);
             options.setCleanSession(true);
             options.setConnectionTimeout(10);
-
+            options.setKeepAliveInterval(60);
             if (!runningMode.equals("Testing"))
             {
-                if(iMqttClient.connectWithResult(options).getClient().isConnected())
+                if(iMqttClient.connectWithResult(options).getClient() != null && iMqttClient.isConnected())
                 {
                     System.out.println("MQTT is connected");
                     setTopic(iMqttClient);
+                }
+                else
+                {
+                    initConnection();
                 }
             }
 
         } catch (MqttException e) {
             e.printStackTrace();
+            initConnection();
         }
 
         return iMqttClient;
@@ -106,6 +106,19 @@ public class MqttConfig {
             public void connectionLost(Throwable cause) {
 
                 System.out.println("MQTT connection is disconnected. " + cause.getMessage());
+                System.out.println("MQTT is reconnecting. " + cause.getMessage());
+                initConnection();
+                try {
+
+                    while(!iMqttClient.connectWithResult(options).getClient().isConnected())
+                    {
+                        initConnection();
+                    }
+
+                }catch (MqttException e) {
+
+                    connectionLost(e);
+                }
 
             }
 
