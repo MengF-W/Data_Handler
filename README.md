@@ -31,3 +31,18 @@ The data handler application process and save the MQTT enabled devices data into
 
 # Example of Document Returned
 ![image](https://github.com/user-attachments/assets/d833388a-c648-47b7-b41e-dfa24c58f916)
+
+# Publish
+It has been published as a service and can be accessed from [Data Panel] (https://github.com/MengF-W/Data_Panel)
+
+# MQTT Broker Deployment Option
+* Public Server : Public MQTT Broker Server such as [Mosquitto](https://test.mosquitto.org/) is available and it is free to test. Clients can read or publish to public topics. Therefore, it is not safe or private for sensitive data
+* Private Host Server : The MQTT Broker can be deployed into cloud service provider such as [Render](https://render.com/deploy-docker/eclipse-mosquitto). After testing find that there is message packet size limitation (for about 5000 bytes length) in Render host service and the client receiver's connection will disconnect when receive message. The max_packet_size setting does not affect it. The explanation from Render about the connection can drop due to: <br />
+
+-Instance lifecycle events<br />
+	Render periodically replaces instances during deploys or maintenance. When an instance shuts down, all its WebSocket connections close — even mid-transfer.<br />
+<br />
+-Network interruptions<br />
+	Outbound IP routing changes can reset TCP connections to external resources. From your service's perspective, this looks like any transient network issue.<br />
+
+* Cloud's Managed MQTT Platform : Cloud's Managed MQTT Platform provider such as [EMQX](https://www.emqx.com/en/cloud) that has Free Tier usage service with limited quota
