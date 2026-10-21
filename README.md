@@ -18,7 +18,7 @@ The data handler application process and save the MQTT enabled devices data into
 `mvn clean package` - To clean and create JAR
 
 # Docker Image Command
-`docker build -t data_handler`    -To build the docker image
+`docker build -t data_handler .`    -To build the docker image
 
 # Docker Container Command
 `docker-compose up -d`      -To start the docker container from the docker image with the docker compose file configuration  
