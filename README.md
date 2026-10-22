@@ -10,6 +10,8 @@ The data handler application process and save the MQTT enabled devices data into
 # Libraries used
 * Spring Boot
 * Spring Data Elastic Search
+* Spring Data JPA
+* PostgreSQL JDBC Driver
 * Spring REST Controller
 * Eclipse Paho Java MQTT
 * Spring Boot Test
