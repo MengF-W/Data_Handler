@@ -4,6 +4,8 @@ import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.json.jackson.JacksonJsonpMapper;
 import co.elastic.clients.transport.rest_client.RestClientTransport;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -22,13 +24,15 @@ import java.io.IOException;
 @EnableElasticsearchRepositories(basePackages = "com.analyzer.datahandler.database.elastic.repository")
 public class ElasticConfiguration
 {
+    Logger logger = LoggerFactory.getLogger(ElasticConfiguration.class);
+
     @Autowired
     private Environment environment;
 
     @Value("${running.mode}")
     private String runningMode;
 
-//    @Bean
+    @Bean
     public RestHighLevelClient initElasticsearchClient() {
 
         final String DATABASE_IP = environment.getProperty("elasticsearch.ip");
@@ -53,10 +57,10 @@ public class ElasticConfiguration
         {
             try {
                 if(client.ping().value()){
-                    System.out.println("Elastic is connected");
+                    logger.info("Elastic is connected");
                 }
             } catch (IOException e) {
-                System.out.println("Elastic is not connected");
+                logger.debug("Elastic is not connected",e.getMessage());
                 throw new RuntimeException(e);
             }
 

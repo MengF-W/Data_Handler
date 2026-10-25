@@ -1,6 +1,9 @@
 package com.analyzer.datahandler.messenger.processor;
 
+import com.analyzer.datahandler.messenger.config.MqttConfig;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
@@ -16,6 +19,8 @@ import java.util.zip.Inflater;
 
 @Component
 public class DeviceMessageProcessor implements MqttMessageProcessor{
+
+    Logger logger = LoggerFactory.getLogger(DeviceMessageProcessor.class);
 
     @Autowired
     private RestTemplate restTemplate;
@@ -38,7 +43,7 @@ public class DeviceMessageProcessor implements MqttMessageProcessor{
         String responseResult =
                 restTemplate.postForObject(DATABASE_URL, request, String.class);
 
-        System.out.println(responseResult);
+        logger.info("Message process response result: " + responseResult);
 
         return responseResult;
     }
