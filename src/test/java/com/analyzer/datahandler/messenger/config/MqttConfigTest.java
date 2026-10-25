@@ -1,9 +1,15 @@
 package com.analyzer.datahandler.messenger.config;
 
 import com.analyzer.datahandler.database.elastic.repository.DeviceElasticRepository;
+import com.analyzer.datahandler.database.postgres.controller.DatabasePostgresController;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.MockBeans;
@@ -18,7 +24,8 @@ import static org.junit.Assert.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = MqttConfig.class)
 @TestPropertySource(properties = {"running.mode=Testing"})
-@MockBeans({@MockBean(DeviceElasticRepository.class)})
+@MockBeans({@MockBean(DeviceElasticRepository.class),@MockBean(DatabasePostgresController.class)})
+@EnableAutoConfiguration(exclude= {DataSourceAutoConfiguration.class,})
 public class MqttConfigTest {
 
     @Autowired
